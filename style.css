@@ -147,12 +147,12 @@ button {
 }
 
 .locale-menu {
-  margin-top: 10px;
+  margin-top: 12px;
   overflow: auto;
-  padding: 2px 2px 4px;
+  padding: 4px 4px 6px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .locale-option {
@@ -160,20 +160,26 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding: 16px 16px 16px 18px;
-  border-radius: 18px;
+  gap: 16px;
+  padding: 18px 18px 18px 20px;
+  border-radius: 20px;
   color: #111827;
   text-align: left;
   font-size: 18px;
   font-weight: 600;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
 }
 
 .locale-option:hover {
   background: #f8fafc;
+  border-color: #dbe4ee;
+}
+
+.locale-option:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
 }
 
 .locale-option__label {
@@ -192,6 +198,12 @@ button {
 .locale-option.is-selected .locale-option__box {
   border-color: #1d4ed8;
   background: #1d4ed8;
+}
+
+.locale-option.is-selected {
+  border-color: #bfd3ff;
+  box-shadow: 0 12px 32px rgba(29, 78, 216, 0.12);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
 }
 
 .locale-option.is-selected .locale-option__box::after {
