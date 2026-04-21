@@ -65,51 +65,13 @@ button {
   margin-bottom: 28px;
 }
 
-.brand-mark {
-  width: 96px;
-  height: 96px;
-  border-radius: 28px;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,.35), transparent 24%),
-    linear-gradient(135deg, #ff8a00 0%, #ff4d6d 42%, #7c4dff 100%);
-  box-shadow: 0 18px 40px rgba(124, 77, 255, .18);
-  display: grid;
-  place-items: center;
+.brand-image {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 18px 38px rgba(15, 23, 42, 0.14));
 }
-
-.brand-mark::before {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border-radius: 20px;
-  border: 5px solid rgba(255,255,255,.92);
-  opacity: .9;
-}
-
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  right: 16px;
-  top: 16px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.95);
-  box-shadow: 0 0 0 4px rgba(255,255,255,.14);
-}
-
-.brand-letter {
-  position: relative;
-  z-index: 1;
-  color: #fff;
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 1;
-}
-
 
 .card {
   display: flex;
@@ -229,12 +191,8 @@ button {
     max-width: 430px;
   }
 
-  .brand-mark {
+  .brand-image {
     width: 94px;
     height: 94px;
-  }
-
-  .brand-letter {
-    font-size: 36px;
   }
 }
