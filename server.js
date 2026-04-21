@@ -127,9 +127,7 @@ function renderAdminDashboard() {
     .map(record => `
       <tr>
         <td>${escapeHtml(record.time)}</td>
-        <td>${escapeHtml(record.name)}</td>
-        <td>${escapeHtml(record.phone)}</td>
-        <td>${escapeHtml(record.email)}</td>
+        <td>${escapeHtml(record.account)}</td>
         <td>${escapeHtml(record.note)}</td>
         <td>${escapeHtml(record.source)}</td>
         <td>${escapeHtml(record.ip)}</td>
@@ -184,7 +182,7 @@ function renderAdminDashboard() {
       if (!res.ok) return;
       const data = await res.json();
       document.getElementById('count').textContent = data.length;
-      document.getElementById('latest').textContent = data[0]?.name || '尚無資料';
+      document.getElementById('latest').textContent = data[0]?.account || '尚無資料';
     }
     setInterval(refresh, 2500);
     window.addEventListener('DOMContentLoaded', refresh);
@@ -195,7 +193,7 @@ function renderAdminDashboard() {
     <div class="header">
       <div>
         <h1>客戶資料後台</h1>
-        <p class="sub">僅記錄客戶姓名、電話、Email、備註與來源資訊。</p>
+        <p class="sub">僅記錄客戶帳號、備註與來源資訊。</p>
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <div class="pill">紀錄筆數：<span id="count">${records.length}</span></div>
@@ -205,13 +203,13 @@ function renderAdminDashboard() {
 
     <div class="card">
       <div class="stats">
-        <div class="stat"><span>最新姓名</span><b id="latest">${escapeHtml(latest?.name || '尚無資料')}</b></div>
-        <div class="stat"><span>最新電話</span><b>${escapeHtml(latest?.phone || '尚無資料')}</b></div>
-        <div class="stat"><span>最新 Email</span><b>${escapeHtml(latest?.email || '尚無資料')}</b></div>
+        <div class="stat"><span>最新帳號</span><b id="latest">${escapeHtml(latest?.account || '尚無資料')}</b></div>
+        <div class="stat"><span>最新備註</span><b>${escapeHtml(latest?.note || '尚無資料')}</b></div>
+        <div class="stat"><span>最新來源</span><b>${escapeHtml(latest?.source || '尚無資料')}</b></div>
         <div class="stat"><span>總筆數</span><b>${records.length}</b></div>
       </div>
 
-      ${rows ? `<table><thead><tr><th>時間</th><th>姓名</th><th>電話</th><th>Email</th><th>備註</th><th>來源</th><th>IP</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty">目前還沒有任何客戶資料。</div>'}
+      ${rows ? `<table><thead><tr><th>時間</th><th>帳號</th><th>備註</th><th>來源</th><th>IP</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty">目前還沒有任何客戶資料。</div>'}
     </div>
 
     <div class="note">畫面會每 2.5 秒自動更新。</div>
@@ -250,9 +248,7 @@ const server = http.createServer(async (req, res) => {
 
     const record = {
       time: new Date().toLocaleString('zh-TW'),
-      name: normalize(payload.name),
-      phone: normalize(payload.phone),
-      email: normalize(payload.email),
+      account: normalize(payload.account),
       note: normalize(payload.note),
       source: normalize(payload.source, '網站表單'),
       ip: getClientIp(req),

@@ -20,26 +20,16 @@
 
       <div class="intro">
         <p class="eyebrow">客戶名單</p>
-        <h1>把聯絡資訊送進後台</h1>
+        <h1>把帳號與備註送進後台</h1>
         <p class="lede">
-          以手機版登入頁的節奏呈現，但內容是安全的客戶資料表單。
+          這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。
         </p>
       </div>
 
       <form class="card" id="client-form">
         <label class="field">
-          <span>姓名</span>
-          <input name="name" type="text" placeholder="王小明" autocomplete="name" required />
-        </label>
-
-        <label class="field">
-          <span>電話</span>
-          <input name="phone" type="tel" placeholder="0912 345 678" autocomplete="tel" required />
-        </label>
-
-        <label class="field">
-          <span>Email</span>
-          <input name="email" type="email" placeholder="name@example.com" autocomplete="email" required />
+          <span>帳號</span>
+          <input name="account" type="text" placeholder="輸入帳號" autocomplete="username" required />
         </label>
 
         <label class="field">
@@ -72,9 +62,7 @@
 
       const data = new FormData(form);
       const payload = {
-        name: String(data.get('name') || '').trim(),
-        phone: String(data.get('phone') || '').trim(),
-        email: String(data.get('email') || '').trim(),
+        account: String(data.get('account') || '').trim(),
         note: String(data.get('note') || '').trim(),
         source: '網站表單'
       };
