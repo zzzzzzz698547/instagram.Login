@@ -10,42 +10,565 @@
 <body>
   <main class="screen">
     <section class="phone">
-      <div class="locale">中文(台灣)</div>
+      <div class="locale-switcher">
+        <button class="locale-button" id="locale-button" type="button" aria-haspopup="true" aria-expanded="false">
+          <span id="locale-label">中文(台灣)</span>
+          <span class="locale-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="locale-menu" id="locale-menu" hidden></div>
+      </div>
 
       <div class="brand" aria-hidden="true">
         <img class="brand-image" src="brand-logo.png" alt="Brand logo" />
       </div>
 
+      <div class="intro">
+        <p class="eyebrow" id="eyebrow">客戶名單</p>
+        <h1 id="headline">把帳號與備註送進後台</h1>
+        <p class="lede" id="lede">這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。</p>
+      </div>
+
       <form class="card" id="client-form">
         <label class="field">
-          <span>帳號</span>
-          <input name="account" type="text" placeholder="輸入帳號" autocomplete="username" required />
+          <span id="account-label">帳號</span>
+          <input id="account-input" name="account" type="text" placeholder="輸入帳號" autocomplete="username" required />
         </label>
 
         <label class="field">
-          <span>備註</span>
-          <input name="note" type="text" placeholder="例如：週五再聯繫、想了解方案 A" autocomplete="off" />
+          <span id="note-label">備註</span>
+          <input id="note-input" name="note" type="text" placeholder="例如：週五再聯繫、想了解方案 A" autocomplete="off" />
         </label>
 
-        <button class="primary-btn" type="submit">送出資料</button>
+        <button class="primary-btn" id="submit-btn" type="submit">送出資料</button>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
 
       <div class="divider">
         <span></span>
-        <p>或</p>
+        <p id="divider-text">或</p>
         <span></span>
       </div>
 
-      <button class="secondary-btn" type="button">查看後台</button>
+      <button class="secondary-btn" id="secondary-btn" type="button">查看後台</button>
 
-      <a class="backlink" href="/admin">管理員登入</a>
+      <a class="backlink" id="admin-link" href="/admin">管理員登入</a>
     </section>
   </main>
 
   <script>
+    const languages = [
+      {
+        id: 'zh-TW',
+        label: '中文(台灣)',
+        htmlLang: 'zh-Hant',
+        dir: 'ltr',
+        title: '客戶資料表單',
+        eyebrow: '客戶名單',
+        headline: '把帳號與備註送進後台',
+        lede: '這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。',
+        accountLabel: '帳號',
+        accountPlaceholder: '輸入帳號',
+        noteLabel: '備註',
+        notePlaceholder: '例如：週五再聯繫、想了解方案 A',
+        submit: '送出資料',
+        divider: '或',
+        secondary: '查看後台',
+        admin: '管理員登入',
+        success: '資料已送出，後台會同步更新。',
+        error: '送出失敗，請稍後再試。'
+      },
+      {
+        id: 'en',
+        label: 'English',
+        htmlLang: 'en',
+        dir: 'ltr',
+        title: 'Customer Form',
+        eyebrow: 'Customer List',
+        headline: 'Send account details to the backend',
+        lede: 'A mobile-first secure form with a clean rhythm and two simple fields.',
+        accountLabel: 'Account',
+        accountPlaceholder: 'Enter account',
+        noteLabel: 'Note',
+        notePlaceholder: 'For example: contact on Friday, interested in plan A',
+        submit: 'Send Data',
+        divider: 'or',
+        secondary: 'View Backend',
+        admin: 'Admin Login',
+        success: 'Data sent. The backend will update automatically.',
+        error: 'Send failed. Please try again later.'
+      },
+      {
+        id: 'ja',
+        label: '日本語',
+        htmlLang: 'ja',
+        dir: 'ltr',
+        title: '顧客フォーム',
+        eyebrow: '顧客リスト',
+        headline: 'アカウントとメモを送信する',
+        lede: 'モバイル向けのシンプルで安全な入力フォームです。',
+        accountLabel: 'アカウント',
+        accountPlaceholder: 'アカウントを入力',
+        noteLabel: 'メモ',
+        notePlaceholder: '例: 金曜日に連絡、プランAに興味あり',
+        submit: '送信する',
+        divider: 'または',
+        secondary: '管理画面を見る',
+        admin: '管理者ログイン',
+        success: '送信しました。管理画面は自動で更新されます。',
+        error: '送信に失敗しました。時間をおいて再度お試しください。'
+      },
+      {
+        id: 'ko',
+        label: '한국어',
+        htmlLang: 'ko',
+        dir: 'ltr',
+        title: '고객 양식',
+        eyebrow: '고객 목록',
+        headline: '계정과 메모를 백엔드로 보내기',
+        lede: '모바일 우선의 안전한 입력 폼입니다.',
+        accountLabel: '계정',
+        accountPlaceholder: '계정을 입력하세요',
+        noteLabel: '메모',
+        notePlaceholder: '예: 금요일에 연락, 플랜 A에 관심 있음',
+        submit: '자료 보내기',
+        divider: '또는',
+        secondary: '관리 화면 보기',
+        admin: '관리자 로그인',
+        success: '전송되었습니다. 관리 화면이 자동으로 업데이트됩니다.',
+        error: '전송에 실패했습니다. 잠시 후 다시 시도하세요.'
+      },
+      {
+        id: 'es',
+        label: 'Español',
+        htmlLang: 'es',
+        dir: 'ltr',
+        title: 'Formulario de clientes',
+        eyebrow: 'Lista de clientes',
+        headline: 'Enviar cuenta y notas al backend',
+        lede: 'Un formulario seguro, pensado primero para móvil y con un ritmo limpio.',
+        accountLabel: 'Cuenta',
+        accountPlaceholder: 'Ingresa la cuenta',
+        noteLabel: 'Nota',
+        notePlaceholder: 'Por ejemplo: contactar el viernes, interesa el plan A',
+        submit: 'Enviar datos',
+        divider: 'o',
+        secondary: 'Ver backend',
+        admin: 'Acceso admin',
+        success: 'Datos enviados. El backend se actualizará automáticamente.',
+        error: 'No se pudo enviar. Inténtalo de nuevo más tarde.'
+      },
+      {
+        id: 'fr',
+        label: 'Français',
+        htmlLang: 'fr',
+        dir: 'ltr',
+        title: 'Formulaire client',
+        eyebrow: 'Liste client',
+        headline: 'Envoyer le compte et les notes au backend',
+        lede: 'Un formulaire sécurisé, pensé d’abord pour mobile, avec une mise en page propre.',
+        accountLabel: 'Compte',
+        accountPlaceholder: 'Saisir le compte',
+        noteLabel: 'Note',
+        notePlaceholder: 'Par exemple : rappeler vendredi, intéressé par le plan A',
+        submit: 'Envoyer',
+        divider: 'ou',
+        secondary: 'Voir le backend',
+        admin: 'Connexion admin',
+        success: 'Données envoyées. Le backend sera mis à jour automatiquement.',
+        error: 'Échec de l’envoi. Veuillez réessayer plus tard.'
+      },
+      {
+        id: 'de',
+        label: 'Deutsch',
+        htmlLang: 'de',
+        dir: 'ltr',
+        title: 'Kundenformular',
+        eyebrow: 'Kundenliste',
+        headline: 'Konto und Notizen ans Backend senden',
+        lede: 'Ein sicheres Formular mit Mobile-First-Layout und klarer Struktur.',
+        accountLabel: 'Konto',
+        accountPlaceholder: 'Konto eingeben',
+        noteLabel: 'Notiz',
+        notePlaceholder: 'Zum Beispiel: Freitag anrufen, interessiert an Plan A',
+        submit: 'Daten senden',
+        divider: 'oder',
+        secondary: 'Backend anzeigen',
+        admin: 'Admin-Login',
+        success: 'Daten gesendet. Das Backend wird automatisch aktualisiert.',
+        error: 'Senden fehlgeschlagen. Bitte später erneut versuchen.'
+      },
+      {
+        id: 'it',
+        label: 'Italiano',
+        htmlLang: 'it',
+        dir: 'ltr',
+        title: 'Modulo clienti',
+        eyebrow: 'Lista clienti',
+        headline: 'Invia account e note al backend',
+        lede: 'Un modulo sicuro, pensato prima per mobile, con uno stile pulito.',
+        accountLabel: 'Account',
+        accountPlaceholder: 'Inserisci account',
+        noteLabel: 'Nota',
+        notePlaceholder: 'Per esempio: contattare venerdì, interessato al piano A',
+        submit: 'Invia dati',
+        divider: 'oppure',
+        secondary: 'Vedi backend',
+        admin: 'Accesso admin',
+        success: 'Dati inviati. Il backend si aggiornerà automaticamente.',
+        error: 'Invio non riuscito. Riprova più tardi.'
+      },
+      {
+        id: 'pt',
+        label: 'Português',
+        htmlLang: 'pt',
+        dir: 'ltr',
+        title: 'Formulário de clientes',
+        eyebrow: 'Lista de clientes',
+        headline: 'Enviar conta e notas para o backend',
+        lede: 'Um formulário seguro, pensado primeiro para mobile, com ritmo limpo.',
+        accountLabel: 'Conta',
+        accountPlaceholder: 'Digite a conta',
+        noteLabel: 'Nota',
+        notePlaceholder: 'Por exemplo: falar na sexta, interessado no plano A',
+        submit: 'Enviar dados',
+        divider: 'ou',
+        secondary: 'Ver backend',
+        admin: 'Login do admin',
+        success: 'Dados enviados. O backend será atualizado automaticamente.',
+        error: 'Falha no envio. Tente novamente mais tarde.'
+      },
+      {
+        id: 'id',
+        label: 'Bahasa Indonesia',
+        htmlLang: 'id',
+        dir: 'ltr',
+        title: 'Formulir pelanggan',
+        eyebrow: 'Daftar pelanggan',
+        headline: 'Kirim akun dan catatan ke backend',
+        lede: 'Formulir aman yang mobile-first dengan tampilan bersih dan ringkas.',
+        accountLabel: 'Akun',
+        accountPlaceholder: 'Masukkan akun',
+        noteLabel: 'Catatan',
+        notePlaceholder: 'Contoh: hubungi hari Jumat, tertarik paket A',
+        submit: 'Kirim data',
+        divider: 'atau',
+        secondary: 'Lihat backend',
+        admin: 'Login admin',
+        success: 'Data terkirim. Backend akan diperbarui otomatis.',
+        error: 'Gagal mengirim. Coba lagi nanti.'
+      },
+      {
+        id: 'th',
+        label: 'ไทย',
+        htmlLang: 'th',
+        dir: 'ltr',
+        title: 'แบบฟอร์มลูกค้า',
+        eyebrow: 'รายชื่อลูกค้า',
+        headline: 'ส่งบัญชีและหมายเหตุไปยังแบ็กเอนด์',
+        lede: 'แบบฟอร์มที่ปลอดภัย ออกแบบเพื่อมือถือเป็นหลัก และดูสะอาดตา',
+        accountLabel: 'บัญชี',
+        accountPlaceholder: 'กรอกบัญชี',
+        noteLabel: 'หมายเหตุ',
+        notePlaceholder: 'เช่น ติดต่อวันศุกร์ สนใจแพ็กเกจ A',
+        submit: 'ส่งข้อมูล',
+        divider: 'หรือ',
+        secondary: 'ดูหลังบ้าน',
+        admin: 'เข้าสู่ระบบแอดมิน',
+        success: 'ส่งข้อมูลแล้ว ระบบหลังบ้านจะอัปเดตอัตโนมัติ',
+        error: 'ส่งไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง'
+      },
+      {
+        id: 'vi',
+        label: 'Tiếng Việt',
+        htmlLang: 'vi',
+        dir: 'ltr',
+        title: 'Biểu mẫu khách hàng',
+        eyebrow: 'Danh sách khách hàng',
+        headline: 'Gửi tài khoản và ghi chú lên backend',
+        lede: 'Biểu mẫu an toàn, ưu tiên di động, bố cục gọn gàng.',
+        accountLabel: 'Tài khoản',
+        accountPlaceholder: 'Nhập tài khoản',
+        noteLabel: 'Ghi chú',
+        notePlaceholder: 'Ví dụ: liên hệ vào thứ Sáu, quan tâm gói A',
+        submit: 'Gửi dữ liệu',
+        divider: 'hoặc',
+        secondary: 'Xem backend',
+        admin: 'Đăng nhập quản trị',
+        success: 'Đã gửi dữ liệu. Backend sẽ tự cập nhật.',
+        error: 'Gửi thất bại. Vui lòng thử lại sau.'
+      },
+      {
+        id: 'ru',
+        label: 'Русский',
+        htmlLang: 'ru',
+        dir: 'ltr',
+        title: 'Форма клиента',
+        eyebrow: 'Список клиентов',
+        headline: 'Отправьте аккаунт и заметку в backend',
+        lede: 'Безопасная форма с мобильным приоритетом и чистой компоновкой.',
+        accountLabel: 'Аккаунт',
+        accountPlaceholder: 'Введите аккаунт',
+        noteLabel: 'Заметка',
+        notePlaceholder: 'Например: связаться в пятницу, интересует план A',
+        submit: 'Отправить',
+        divider: 'или',
+        secondary: 'Открыть backend',
+        admin: 'Вход администратора',
+        success: 'Данные отправлены. Backend обновится автоматически.',
+        error: 'Не удалось отправить. Попробуйте позже.'
+      },
+      {
+        id: 'ar',
+        label: 'العربية',
+        htmlLang: 'ar',
+        dir: 'rtl',
+        title: 'نموذج العملاء',
+        eyebrow: 'قائمة العملاء',
+        headline: 'إرسال الحساب والملاحظات إلى الواجهة الخلفية',
+        lede: 'نموذج آمن بتركيز أولي على الهاتف وتصميم نظيف.',
+        accountLabel: 'الحساب',
+        accountPlaceholder: 'أدخل الحساب',
+        noteLabel: 'ملاحظة',
+        notePlaceholder: 'مثال: التواصل يوم الجمعة، مهتم بالخطة A',
+        submit: 'إرسال البيانات',
+        divider: 'أو',
+        secondary: 'عرض الواجهة الخلفية',
+        admin: 'تسجيل دخول المدير',
+        success: 'تم الإرسال. سيتم تحديث الواجهة الخلفية تلقائيًا.',
+        error: 'فشل الإرسال. حاول مرة أخرى لاحقًا.'
+      },
+      {
+        id: 'hi',
+        label: 'हिन्दी',
+        htmlLang: 'hi',
+        dir: 'ltr',
+        title: 'ग्राहक फ़ॉर्म',
+        eyebrow: 'ग्राहक सूची',
+        headline: 'खाता और नोट्स बैकएंड में भेजें',
+        lede: 'मोबाइल-फर्स्ट, सुरक्षित और साफ़-सुथरा फ़ॉर्म।',
+        accountLabel: 'खाता',
+        accountPlaceholder: 'खाता दर्ज करें',
+        noteLabel: 'नोट',
+        notePlaceholder: 'उदाहरण: शुक्रवार को संपर्क करें, योजना A में रुचि',
+        submit: 'डेटा भेजें',
+        divider: 'या',
+        secondary: 'बैकएंड देखें',
+        admin: 'एडमिन लॉगिन',
+        success: 'डेटा भेज दिया गया है। बैकएंड अपने-आप अपडेट होगा।',
+        error: 'भेजने में विफल। कृपया बाद में पुनः प्रयास करें।'
+      },
+      {
+        id: 'tr',
+        label: 'Türkçe',
+        htmlLang: 'tr',
+        dir: 'ltr',
+        title: 'Müşteri formu',
+        eyebrow: 'Müşteri listesi',
+        headline: 'Hesap ve notları backend’e gönderin',
+        lede: 'Önce mobil için tasarlanmış, sade ve güvenli bir form.',
+        accountLabel: 'Hesap',
+        accountPlaceholder: 'Hesabı girin',
+        noteLabel: 'Not',
+        notePlaceholder: 'Örn: Cuma günü iletişime geç, A planı ile ilgileniyor',
+        submit: 'Veriyi gönder',
+        divider: 'veya',
+        secondary: 'Backend’i görüntüle',
+        admin: 'Yönetici girişi',
+        success: 'Veri gönderildi. Backend otomatik güncellenecek.',
+        error: 'Gönderilemedi. Lütfen daha sonra tekrar deneyin.'
+      },
+      {
+        id: 'nl',
+        label: 'Nederlands',
+        htmlLang: 'nl',
+        dir: 'ltr',
+        title: 'Klantformulier',
+        eyebrow: 'Klantenlijst',
+        headline: 'Account en notities naar de backend sturen',
+        lede: 'Een veilig, mobiel-eerst formulier met een strakke lay-out.',
+        accountLabel: 'Account',
+        accountPlaceholder: 'Voer account in',
+        noteLabel: 'Notitie',
+        notePlaceholder: 'Bijv.: vrijdag contact opnemen, interesse in plan A',
+        submit: 'Gegevens verzenden',
+        divider: 'of',
+        secondary: 'Backend bekijken',
+        admin: 'Admin inloggen',
+        success: 'Gegevens verzonden. De backend wordt automatisch bijgewerkt.',
+        error: 'Verzenden mislukt. Probeer het later opnieuw.'
+      },
+      {
+        id: 'pl',
+        label: 'Polski',
+        htmlLang: 'pl',
+        dir: 'ltr',
+        title: 'Formularz klienta',
+        eyebrow: 'Lista klientów',
+        headline: 'Wyślij konto i notatki do backendu',
+        lede: 'Bezpieczny formularz mobile-first z przejrzystym układem.',
+        accountLabel: 'Konto',
+        accountPlaceholder: 'Wpisz konto',
+        noteLabel: 'Notatka',
+        notePlaceholder: 'Np. skontaktować się w piątek, interesuje plan A',
+        submit: 'Wyślij dane',
+        divider: 'lub',
+        secondary: 'Zobacz backend',
+        admin: 'Logowanie admina',
+        success: 'Dane wysłane. Backend zostanie zaktualizowany automatycznie.',
+        error: 'Nie udało się wysłać. Spróbuj ponownie później.'
+      },
+      {
+        id: 'sv',
+        label: 'Svenska',
+        htmlLang: 'sv',
+        dir: 'ltr',
+        title: 'Kundformulär',
+        eyebrow: 'Kundlista',
+        headline: 'Skicka konto och anteckningar till backend',
+        lede: 'Ett säkert formulär med fokus på mobil och ett rent uttryck.',
+        accountLabel: 'Konto',
+        accountPlaceholder: 'Ange konto',
+        noteLabel: 'Anteckning',
+        notePlaceholder: 'Till exempel: kontakta på fredag, intresserad av plan A',
+        submit: 'Skicka data',
+        divider: 'eller',
+        secondary: 'Visa backend',
+        admin: 'Admininloggning',
+        success: 'Data skickades. Backend uppdateras automatiskt.',
+        error: 'Det gick inte att skicka. Försök igen senare.'
+      },
+      {
+        id: 'he',
+        label: 'עברית',
+        htmlLang: 'he',
+        dir: 'rtl',
+        title: 'טופס לקוחות',
+        eyebrow: 'רשימת לקוחות',
+        headline: 'שליחת חשבון והערות לשרת',
+        lede: 'טופס מאובטח עם עדיפות למובייל ועיצוב נקי.',
+        accountLabel: 'חשבון',
+        accountPlaceholder: 'הזן חשבון',
+        noteLabel: 'הערה',
+        notePlaceholder: 'למשל: ליצור קשר ביום שישי, מתעניין בתוכנית A',
+        submit: 'שלח נתונים',
+        divider: 'או',
+        secondary: 'צפה בשרת',
+        admin: 'כניסת מנהל',
+        success: 'הנתונים נשלחו. השרת יתעדכן אוטומטית.',
+        error: 'השליחה נכשלה. נסו שוב מאוחר יותר.'
+      }
+    ];
+
     const form = document.getElementById('client-form');
     const status = document.getElementById('status');
+    const localeButton = document.getElementById('locale-button');
+    const localeLabel = document.getElementById('locale-label');
+    const localeMenu = document.getElementById('locale-menu');
+    const accountLabel = document.getElementById('account-label');
+    const noteLabel = document.getElementById('note-label');
+    const accountInput = document.getElementById('account-input');
+    const noteInput = document.getElementById('note-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const dividerText = document.getElementById('divider-text');
+    const secondaryBtn = document.getElementById('secondary-btn');
+    const adminLink = document.getElementById('admin-link');
+    const eyebrow = document.getElementById('eyebrow');
+    const headline = document.getElementById('headline');
+    const lede = document.getElementById('lede');
+
+    const STORAGE_KEY = 'preferred-language';
+    let currentLanguageId = 'zh-TW';
+    let lastOutcome = '';
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function getLanguage(id) {
+      return languages.find((entry) => entry.id === id) || languages[0];
+    }
+
+    function setMenuOpen(isOpen) {
+      localeMenu.hidden = !isOpen;
+      localeButton.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function renderLanguageMenu() {
+      localeMenu.innerHTML = languages
+        .map((entry) => `
+          <button type="button" class="locale-option" data-language="${entry.id}" aria-selected="${entry.id === currentLanguageId}">
+            <span>${escapeHtml(entry.label)}</span>
+          </button>
+        `)
+        .join('');
+    }
+
+    function applyLanguage(id, persist = true) {
+      const language = getLanguage(id);
+      currentLanguageId = language.id;
+
+      if (persist) {
+        try {
+          localStorage.setItem(STORAGE_KEY, language.id);
+        } catch {}
+      }
+
+      document.documentElement.lang = language.htmlLang;
+      if (language.dir) {
+        document.documentElement.dir = language.dir;
+      } else {
+        document.documentElement.removeAttribute('dir');
+      }
+
+      document.title = language.title;
+      localeLabel.textContent = language.label;
+      eyebrow.textContent = language.eyebrow;
+      headline.textContent = language.headline;
+      lede.textContent = language.lede;
+      accountLabel.textContent = language.accountLabel;
+      noteLabel.textContent = language.noteLabel;
+      accountInput.placeholder = language.accountPlaceholder;
+      noteInput.placeholder = language.notePlaceholder;
+      submitBtn.textContent = language.submit;
+      dividerText.textContent = language.divider;
+      secondaryBtn.textContent = language.secondary;
+      adminLink.textContent = language.admin;
+      renderLanguageMenu();
+
+      if (lastOutcome === 'success') {
+        status.textContent = language.success;
+      } else if (lastOutcome === 'error') {
+        status.textContent = language.error;
+      }
+    }
+
+    localeButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const shouldOpen = localeMenu.hidden;
+      renderLanguageMenu();
+      setMenuOpen(shouldOpen);
+    });
+
+    localeMenu.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-language]');
+      if (!button) return;
+      applyLanguage(button.dataset.language);
+      setMenuOpen(false);
+    });
+
+    document.addEventListener('click', () => setMenuOpen(false));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
+
+    secondaryBtn.addEventListener('click', () => {
+      window.location.href = '/admin';
+    });
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -64,12 +587,21 @@
       });
 
       if (response.ok) {
-        status.textContent = '資料已送出，後台會同步更新。';
+        lastOutcome = 'success';
+        status.textContent = getLanguage(currentLanguageId).success;
         form.reset();
       } else {
-        status.textContent = '送出失敗，請稍後再試。';
+        lastOutcome = 'error';
+        status.textContent = getLanguage(currentLanguageId).error;
       }
     });
+
+    try {
+      const savedLanguage = localStorage.getItem(STORAGE_KEY);
+      applyLanguage(savedLanguage || 'zh-TW', false);
+    } catch {
+      applyLanguage('zh-TW', false);
+    }
   </script>
 </body>
 </html>
