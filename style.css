@@ -363,7 +363,7 @@ button {
 
 .footer-mark {
   display: block;
-  width: 84px;
+  width: 72px;
   height: auto;
   margin: 14px auto 0;
   opacity: 0.88;
@@ -385,6 +385,10 @@ button {
   .brand-image {
     width: 84px;
     height: 84px;
+  }
+
+  .footer-mark {
+    width: 80px;
   }
 
   .intro h1 {
