@@ -22,12 +22,6 @@
         <img class="brand-image" src="brand-logo.png" alt="Brand logo" />
       </div>
 
-      <div class="intro">
-        <p class="eyebrow" id="eyebrow">客戶名單</p>
-        <h1 id="headline">把帳號與備註送進後台</h1>
-        <p class="lede" id="lede">這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。</p>
-      </div>
-
       <form class="card" id="client-form">
         <label class="field">
           <span id="account-label">帳號</span>
@@ -40,6 +34,8 @@
         </label>
 
         <button class="primary-btn" id="submit-btn" type="submit">送出資料</button>
+
+        <a class="backlink" id="admin-link" href="/admin">管理員登入</a>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
 
@@ -50,8 +46,6 @@
       </div>
 
       <button class="secondary-btn" id="secondary-btn" type="button">查看後台</button>
-
-      <a class="backlink" id="admin-link" href="/admin">管理員登入</a>
     </section>
   </main>
 
@@ -472,10 +466,6 @@
     const dividerText = document.getElementById('divider-text');
     const secondaryBtn = document.getElementById('secondary-btn');
     const adminLink = document.getElementById('admin-link');
-    const eyebrow = document.getElementById('eyebrow');
-    const headline = document.getElementById('headline');
-    const lede = document.getElementById('lede');
-
     const STORAGE_KEY = 'preferred-language';
     let currentLanguageId = 'zh-TW';
     let lastOutcome = '';
@@ -527,9 +517,6 @@
 
       document.title = language.title;
       localeLabel.textContent = language.label;
-      eyebrow.textContent = language.eyebrow;
-      headline.textContent = language.headline;
-      lede.textContent = language.lede;
       accountLabel.textContent = language.accountLabel;
       noteLabel.textContent = language.noteLabel;
       accountInput.placeholder = language.accountPlaceholder;
