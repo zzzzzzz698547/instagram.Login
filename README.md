@@ -24,3 +24,23 @@ Open:
 Default admin login:
 - Username: `admin`
 - Password: `123456`
+
+## Optional Telegram start notification
+
+If you want a `server start` notification, set these environment variables:
+
+- `TG_BOT_TOKEN`
+- `TG_CHAT_ID`
+
+Local PowerShell example:
+
+```powershell
+$env:TG_BOT_TOKEN="your_telegram_bot_token"
+$env:TG_CHAT_ID="your_telegram_chat_id"
+npm start
+```
+
+Render example:
+
+- Add `TG_BOT_TOKEN` and `TG_CHAT_ID` in the service environment variables
+- Redeploy after saving the variables
