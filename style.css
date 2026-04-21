@@ -233,26 +233,6 @@ button {
   font-weight: 600;
 }
 
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 0 16px;
-  color: var(--muted);
-}
-
-.divider span {
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-}
-
-.divider p {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-}
-
 .secondary-btn {
   border: 1px solid #1b74e4;
   color: #1b74e4;
