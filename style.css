@@ -119,8 +119,8 @@ button {
 }
 
 .brand-image {
-  width: 80px;
-  height: 80px;
+  width: 56px;
+  height: 56px;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 14px 30px rgba(15, 23, 42, 0.12));
@@ -252,7 +252,7 @@ button {
 
 .footer-mark {
   display: block;
-  width: 96px;
+  width: 84px;
   height: auto;
   margin: 14px auto 0;
   opacity: 0.88;
@@ -272,8 +272,8 @@ button {
   }
 
   .brand-image {
-    width: 86px;
-    height: 86px;
+    width: 78px;
+    height: 78px;
   }
 
   .intro h1 {
