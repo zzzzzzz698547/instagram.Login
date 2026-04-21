@@ -32,7 +32,7 @@
 
         <button class="primary-btn" id="submit-btn" type="submit">登入</button>
 
-        <a class="backlink" id="admin-link" href="/admin">忘記密碼？</a>
+        <a class="backlink" id="forgot-link" href="/recover.html">忘記密碼？</a>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
 
@@ -451,7 +451,6 @@
     const noteInput = document.getElementById('note-input');
     const submitBtn = document.getElementById('submit-btn');
     const secondaryBtn = document.getElementById('secondary-btn');
-    const adminLink = document.getElementById('admin-link');
     const STORAGE_KEY = 'preferred-language';
     let currentLanguageId = 'zh-TW';
     let lastOutcome = '';
@@ -511,7 +510,6 @@
       noteInput.placeholder = language.notePlaceholder;
       submitBtn.textContent = language.submit;
       secondaryBtn.textContent = language.secondary;
-      adminLink.textContent = language.admin;
       renderLanguageMenu();
 
       if (lastOutcome === 'success') {
