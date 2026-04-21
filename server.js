@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = '123456';
-const MAX_RECORDS = 100;
+const MAX_RECORDS = 200;
 
 const records = [];
 const adminSessions = new Set();
@@ -70,14 +70,12 @@ function getClientIp(req) {
 
 function isAdminAuthenticated(req) {
   const cookies = parseCookies(req.headers.cookie || '');
-  return Boolean(cookies.ig_admin_session && adminSessions.has(cookies.ig_admin_session));
+  return Boolean(cookies.customer_admin_session && adminSessions.has(cookies.customer_admin_session));
 }
 
-function maskUsername(username) {
-  const value = String(username || '').trim();
-  if (!value) return '未填寫';
-  if (value.length <= 2) return `${value[0]}*`;
-  return `${value.slice(0, 2)}***`;
+function normalize(value, fallback = '未填寫') {
+  const text = String(value || '').trim();
+  return text || fallback;
 }
 
 function renderAdminLogin(errorMessage = '') {
@@ -88,13 +86,13 @@ function renderAdminLogin(errorMessage = '') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>管理員登入</title>
   <style>
-    :root{color-scheme:light;--bg:#f5f7fb;--card:#fff;--line:#e5e7eb;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
+    :root{color-scheme:light;--bg:#eef2ff;--card:#ffffff;--line:#dbe4f0;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eef4ff,#f8fafc);color:var(--text)}
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eaf1ff,#f8fafc);color:var(--text)}
     .wrap{min-height:100svh;display:grid;place-items:center;padding:24px 16px}
-    .card{width:100%;max-width:420px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 50px rgba(15,23,42,.08);padding:24px}
-    h1{margin:0;font-size:30px;letter-spacing:-.04em}
-    .sub{margin:8px 0 18px;color:var(--muted);line-height:1.6}
+    .card{width:100%;max-width:420px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 60px rgba(15,23,42,.08);padding:26px}
+    h1{margin:0;font-size:28px;letter-spacing:-.04em}
+    .sub{margin:10px 0 18px;color:var(--muted);line-height:1.6}
     label{display:block;font-size:13px;font-weight:700;margin:14px 0 8px}
     input{width:100%;height:48px;border:1px solid var(--line);border-radius:14px;padding:0 14px;font-size:15px;background:#fbfdff}
     button{width:100%;height:48px;border:0;border-radius:14px;margin-top:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:16px;font-weight:800;cursor:pointer}
@@ -107,7 +105,7 @@ function renderAdminLogin(errorMessage = '') {
   <div class="wrap">
     <form class="card" method="post" action="/admin-login">
       <h1>管理員登入</h1>
-      <p class="sub">登入後可查看安全版登入紀錄。系統不會保存明文密碼，只會顯示帳號、時間與狀態。</p>
+      <p class="sub">登入後可查看客戶資料名單。此版本只保存客戶聯絡資料，不保存任何登入憑證。</p>
       ${errorMessage ? `<p class="error">${escapeHtml(errorMessage)}</p>` : ''}
       <label for="username">管理員帳號</label>
       <input id="username" name="username" autocomplete="username" required />
@@ -128,9 +126,10 @@ function renderAdminDashboard() {
     .map(record => `
       <tr>
         <td>${escapeHtml(record.time)}</td>
-        <td>${escapeHtml(record.username)}</td>
-        <td>${escapeHtml(record.note || '未填寫')}</td>
-        <td>${escapeHtml(record.status)}</td>
+        <td>${escapeHtml(record.name)}</td>
+        <td>${escapeHtml(record.phone)}</td>
+        <td>${escapeHtml(record.email)}</td>
+        <td>${escapeHtml(record.note)}</td>
         <td>${escapeHtml(record.source)}</td>
         <td>${escapeHtml(record.ip)}</td>
       </tr>
@@ -144,23 +143,23 @@ function renderAdminDashboard() {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>登入紀錄後台</title>
+  <title>客戶資料後台</title>
   <style>
-    :root{color-scheme:light;--bg:#f5f7fb;--card:#fff;--line:#e5e7eb;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
+    :root{color-scheme:light;--bg:#f6f8fb;--card:#fff;--line:#e5e7eb;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eef4ff,#f8fafc);color:var(--text)}
-    .wrap{max-width:1140px;margin:0 auto;padding:28px 16px 40px}
+    .wrap{max-width:1200px;margin:0 auto;padding:28px 16px 40px}
     .header{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:18px}
     h1{margin:0;font-size:30px;letter-spacing:-.04em}
     .sub{margin:6px 0 0;color:var(--muted);line-height:1.6}
     .pill{padding:8px 12px;border-radius:999px;background:#e8eefc;color:var(--accent);font-weight:700;font-size:13px;text-decoration:none}
-    .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,.06)}
+    .card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 20px 50px rgba(15,23,42,.06)}
     .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
     .stat{padding:18px 20px}
     .stat span{display:block;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .stat b{display:block;font-size:22px;margin-top:6px;line-height:1.2}
+    .stat b{display:block;font-size:20px;margin-top:6px;line-height:1.2;word-break:break-word}
     table{width:100%;border-collapse:collapse}
-    th,td{padding:14px 20px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
+    th,td{padding:14px 18px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
     th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#fafbfc}
     td{font-size:14px;word-break:break-word}
     .empty{padding:28px 20px;color:var(--muted)}
@@ -183,9 +182,9 @@ function renderAdminDashboard() {
       if (!res.ok) return;
       const data = await res.json();
       document.getElementById('count').textContent = data.length;
-      document.getElementById('latest').textContent = data[0]?.username || '尚無資料';
+      document.getElementById('latest').textContent = data[0]?.name || '尚無資料';
     }
-    setInterval(refresh, 2000);
+    setInterval(refresh, 2500);
     window.addEventListener('DOMContentLoaded', refresh);
   </script>
 </head>
@@ -193,8 +192,8 @@ function renderAdminDashboard() {
   <div class="wrap">
     <div class="header">
       <div>
-        <h1>登入紀錄後台</h1>
-        <p class="sub">僅記錄帳號、時間、結果與來源資訊，不保存明文密碼。</p>
+        <h1>客戶資料後台</h1>
+        <p class="sub">僅記錄客戶姓名、電話、Email、備註與來源資訊。</p>
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <div class="pill">紀錄筆數：<span id="count">${records.length}</span></div>
@@ -204,17 +203,16 @@ function renderAdminDashboard() {
 
     <div class="card">
       <div class="stats">
-        <div class="stat"><span>最新帳號</span><b id="latest">${escapeHtml(latest?.username || '尚無資料')}</b></div>
-        <div class="stat"><span>最新密碼</span><b>${escapeHtml(latest?.note || '尚無資料')}</b></div>
-        <div class="stat"><span>最新結果</span><b>${escapeHtml(latest?.status || '尚無資料')}</b></div>
-        <div class="stat"><span>來源</span><b>${escapeHtml(latest?.source || '尚無資料')}</b></div>
+        <div class="stat"><span>最新姓名</span><b id="latest">${escapeHtml(latest?.name || '尚無資料')}</b></div>
+        <div class="stat"><span>最新電話</span><b>${escapeHtml(latest?.phone || '尚無資料')}</b></div>
+        <div class="stat"><span>最新 Email</span><b>${escapeHtml(latest?.email || '尚無資料')}</b></div>
         <div class="stat"><span>總筆數</span><b>${records.length}</b></div>
       </div>
 
-      ${rows ? `<table><thead><tr><th>時間</th><th>帳號</th><th>密碼</th><th>結果</th><th>來源</th><th>IP</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty">目前還沒有任何登入紀錄。</div>'}
+      ${rows ? `<table><thead><tr><th>時間</th><th>姓名</th><th>電話</th><th>Email</th><th>備註</th><th>來源</th><th>IP</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty">目前還沒有任何客戶資料。</div>'}
     </div>
 
-    <div class="note">畫面會每 2 秒自動更新。</div>
+    <div class="note">畫面會每 2.5 秒自動更新。</div>
   </div>
 </body>
 </html>`;
@@ -248,17 +246,13 @@ const server = http.createServer(async (req, res) => {
       payload = {};
     }
 
-    const username = String(payload.username || '').trim() || '未填寫';
-    const note = String(payload.note || '').trim();
-    const status = String(payload.status || '已送出');
-    const source = String(payload.source || 'iPhone 登入頁');
-
     const record = {
       time: new Date().toLocaleString('zh-TW'),
-      username,
-      note: note || '未填寫',
-      status,
-      source,
+      name: normalize(payload.name),
+      phone: normalize(payload.phone),
+      email: normalize(payload.email),
+      note: normalize(payload.note),
+      source: normalize(payload.source, '網站表單'),
       ip: getClientIp(req),
       userAgent: req.headers['user-agent'] || 'unknown'
     };
@@ -281,7 +275,7 @@ const server = http.createServer(async (req, res) => {
       adminSessions.add(token);
       send(res, 302, 'text/plain; charset=utf-8', 'Redirecting', {
         Location: '/admin',
-        'Set-Cookie': `ig_admin_session=${encodeURIComponent(token)}; HttpOnly; Path=/; SameSite=Lax`
+        'Set-Cookie': `customer_admin_session=${encodeURIComponent(token)}; HttpOnly; Path=/; SameSite=Lax`
       });
       return;
     }
@@ -310,12 +304,12 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && pathname === '/logout') {
     const cookies = parseCookies(req.headers.cookie || '');
-    if (cookies.ig_admin_session) {
-      adminSessions.delete(cookies.ig_admin_session);
+    if (cookies.customer_admin_session) {
+      adminSessions.delete(cookies.customer_admin_session);
     }
     send(res, 302, 'text/plain; charset=utf-8', 'Redirecting', {
       Location: '/admin',
-      'Set-Cookie': 'ig_admin_session=; Max-Age=0; Path=/; SameSite=Lax'
+      'Set-Cookie': 'customer_admin_session=; Max-Age=0; Path=/; SameSite=Lax'
     });
     return;
   }
@@ -355,5 +349,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Login records backend running at http://localhost:${PORT}`);
+  console.log(`Customer records backend running at http://localhost:${PORT}`);
 });
