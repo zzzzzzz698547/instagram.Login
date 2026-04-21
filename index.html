@@ -178,8 +178,7 @@
       });
 
       if (response.ok) {
-        status.textContent = '資料已送出，後台會同步更新。';
-        form.reset();
+        window.location.href = '/thanks.html';
       } else {
         status.textContent = '送出失敗，請稍後再試。';
       }

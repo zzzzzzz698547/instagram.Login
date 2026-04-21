@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>感謝頁</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #1b74e4;
+      --soft: #f3f4f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .screen {
+      min-height: 100svh;
+      padding: 20px 18px;
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 390px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px 20px;
+      background: #fff;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+      text-align: center;
+    }
+
+    .badge {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .primary,
+    .secondary {
+      height: 52px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .secondary {
+      background: var(--soft);
+      color: #1f2937;
+    }
+  </style>
+</head>
+<body>
+  <main class="screen">
+    <section class="card">
+      <div class="badge">✓</div>
+      <h1>已完成送出</h1>
+      <p>謝謝你的資料，系統已收到並保留到下一步。</p>
+
+      <div class="actions">
+        <a class="primary" href="/index.html">回到首頁</a>
+        <a class="secondary" href="/create-account.html">繼續建立帳號</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
