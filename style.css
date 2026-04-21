@@ -345,7 +345,7 @@ button {
 }
 
 .secondary-btn {
-  margin-top: 18px;
+  margin-top: 28px;
   border: 1px solid #1b74e4;
   color: #1b74e4;
   background: #fff;
@@ -366,7 +366,7 @@ button {
   display: block;
   width: 72px;
   height: auto;
-  margin: 18px auto 0;
+  margin: 26px auto 0;
   opacity: 0.88;
 }
 
