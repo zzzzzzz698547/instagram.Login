@@ -1,0 +1,7 @@
+<svg width="240" height="72" viewBox="0 0 240 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="36" r="18" stroke="#1B74E4" stroke-width="8"/>
+  <path d="M52 36c0 8.837-7.163 16-16 16S20 44.837 20 36s7.163-16 16-16" stroke="#0F172A" stroke-width="8" stroke-linecap="round"/>
+  <rect x="72" y="24" width="132" height="24" rx="12" fill="#0F172A" fill-opacity="0.12"/>
+  <path d="M78 36h120" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+  <text x="122" y="40" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#0F172A">Brand</text>
+</svg>

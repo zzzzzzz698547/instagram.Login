@@ -251,6 +251,14 @@ button {
   letter-spacing: -0.01em;
 }
 
+.footer-mark {
+  display: block;
+  width: 108px;
+  height: auto;
+  margin: 14px auto 0;
+  opacity: 0.88;
+}
+
 @media (min-width: 768px) {
   .screen {
     padding: 20px 24px 24px;
