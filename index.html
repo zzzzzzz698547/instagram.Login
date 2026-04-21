@@ -15,7 +15,6 @@
           <span id="locale-label">中文(台灣)</span>
           <span class="locale-caret" aria-hidden="true">▾</span>
         </button>
-        <div class="locale-menu" id="locale-menu" hidden></div>
       </div>
 
       <div class="brand" aria-hidden="true">
@@ -42,6 +41,17 @@
       <img class="footer-mark" src="footer-mark.png" alt="Brand mark" />
     </section>
   </main>
+
+  <div class="locale-backdrop" id="locale-backdrop" hidden></div>
+  <section class="locale-sheet" id="locale-sheet" role="dialog" aria-modal="true" aria-labelledby="locale-sheet-title" hidden>
+    <div class="locale-sheet__handle" aria-hidden="true"></div>
+    <div class="locale-sheet__header">
+      <button class="locale-sheet__close" id="locale-close" type="button" aria-label="關閉語言選單">×</button>
+      <h2 class="locale-sheet__title" id="locale-sheet-title">選擇語言</h2>
+      <span class="locale-sheet__spacer" aria-hidden="true"></span>
+    </div>
+    <div class="locale-menu" id="locale-menu"></div>
+  </section>
 
   <script>
     const languages = [
@@ -432,6 +442,9 @@
     const localeButton = document.getElementById('locale-button');
     const localeLabel = document.getElementById('locale-label');
     const localeMenu = document.getElementById('locale-menu');
+    const localeSheet = document.getElementById('locale-sheet');
+    const localeBackdrop = document.getElementById('locale-backdrop');
+    const localeClose = document.getElementById('locale-close');
     const accountLabel = document.getElementById('account-label');
     const noteLabel = document.getElementById('note-label');
     const accountInput = document.getElementById('account-input');
@@ -457,15 +470,17 @@
     }
 
     function setMenuOpen(isOpen) {
-      localeMenu.hidden = !isOpen;
+      localeSheet.hidden = !isOpen;
+      localeBackdrop.hidden = !isOpen;
       localeButton.setAttribute('aria-expanded', String(isOpen));
     }
 
     function renderLanguageMenu() {
       localeMenu.innerHTML = languages
         .map((entry) => `
-          <button type="button" class="locale-option" data-language="${entry.id}" aria-selected="${entry.id === currentLanguageId}">
-            <span>${escapeHtml(entry.label)}</span>
+          <button type="button" class="locale-option${entry.id === currentLanguageId ? ' is-selected' : ''}" data-language="${entry.id}" aria-selected="${entry.id === currentLanguageId}">
+            <span class="locale-option__label">${escapeHtml(entry.label)}</span>
+            <span class="locale-option__box" aria-hidden="true"></span>
           </button>
         `)
         .join('');
@@ -508,7 +523,7 @@
 
     localeButton.addEventListener('click', (event) => {
       event.stopPropagation();
-      const shouldOpen = localeMenu.hidden;
+      const shouldOpen = localeSheet.hidden;
       renderLanguageMenu();
       setMenuOpen(shouldOpen);
     });
@@ -520,7 +535,8 @@
       setMenuOpen(false);
     });
 
-    document.addEventListener('click', () => setMenuOpen(false));
+    localeClose.addEventListener('click', () => setMenuOpen(false));
+    localeBackdrop.addEventListener('click', () => setMenuOpen(false));
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') setMenuOpen(false);
     });

@@ -79,37 +79,124 @@ button {
   transform: translateY(-1px);
 }
 
-.locale-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(calc(100vw - 36px), 280px);
-  max-height: 320px;
-  overflow: auto;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
+.locale-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.46);
+  z-index: 40;
+}
+
+.locale-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 41;
   background: #fff;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-  z-index: 10;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.24);
+  padding: 10px 18px 18px;
+  max-height: 72svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.locale-sheet__handle {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  margin: 2px auto 14px;
+  background: #c9ced7;
+}
+
+.locale-sheet__header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+}
+
+.locale-sheet__close {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: #111827;
+  font-size: 34px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+
+.locale-sheet__title {
+  margin: 0;
+  text-align: left;
+  color: #111827;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.locale-sheet__spacer {
+  width: 44px;
+  height: 44px;
+}
+
+.locale-menu {
+  margin-top: 14px;
+  overflow: auto;
+  padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .locale-option {
-  display: block;
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 4px 14px 6px;
+  border-radius: 14px;
+  color: #111827;
   text-align: left;
-  color: var(--text);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 
-.locale-option:hover,
-.locale-option[aria-selected="true"] {
-  background: #f3f7ff;
-  color: #1d4ed8;
+.locale-option:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.locale-option__label {
+  flex: 1;
+}
+
+.locale-option__box {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border: 2px solid #9ca3af;
+  border-radius: 4px;
+  position: relative;
+}
+
+.locale-option.is-selected .locale-option__box {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+}
+
+.locale-option.is-selected .locale-option__box::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .brand {
