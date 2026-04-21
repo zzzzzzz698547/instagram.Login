@@ -85,6 +85,7 @@ function renderAdminLogin(errorMessage = '') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>管理員登入</title>
+  <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
   <style>
     :root{color-scheme:light;--bg:#eef2ff;--card:#ffffff;--line:#dbe4f0;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
     *{box-sizing:border-box}
@@ -144,6 +145,7 @@ function renderAdminDashboard() {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>客戶資料後台</title>
+  <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
   <style>
     :root{color-scheme:light;--bg:#f6f8fb;--card:#fff;--line:#e5e7eb;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent2:#0ea5e9}
     *{box-sizing:border-box}
