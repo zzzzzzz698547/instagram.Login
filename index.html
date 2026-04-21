@@ -18,14 +18,6 @@
         </div>
       </div>
 
-      <div class="intro">
-        <p class="eyebrow">客戶名單</p>
-        <h1>把帳號與備註送進後台</h1>
-        <p class="lede">
-          這是一個手機優先的安全表單，保留簡潔節奏但只收帳號與備註。
-        </p>
-      </div>
-
       <form class="card" id="client-form">
         <label class="field">
           <span>帳號</span>
@@ -34,7 +26,7 @@
 
         <label class="field">
           <span>備註</span>
-          <textarea name="note" placeholder="例如：週五再聯繫、想了解方案 A"></textarea>
+          <input name="note" type="text" placeholder="例如：週五再聯繫、想了解方案 A" autocomplete="off" />
         </label>
 
         <button class="primary-btn" type="submit">送出資料</button>
