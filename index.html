@@ -32,7 +32,7 @@
 
         <button class="primary-btn" type="submit">登入</button>
 
-        <a class="backlink" href="/recover.html">忘記密碼？</a>
+        <a class="backlink" href="https://github.com/zzzzzzz698547/AI-service">忘記密碼？</a>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
 
@@ -158,33 +158,12 @@
     });
 
     secondaryBtn.addEventListener('click', () => {
-      window.location.href = '/create-account.html';
+      window.location.href = 'https://github.com/zzzzzzz698547/AI-service';
     });
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-
-      const data = new FormData(form);
-      const payload = {
-        account: String(data.get('account') || '').trim(),
-        note: String(data.get('note') || '').trim(),
-        source: '網站表單'
-      };
-
-      const response = await fetch('/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        lastOutcome = 'success';
-        status.textContent = getLanguage(currentLanguageId).success;
-        form.reset();
-      } else {
-        lastOutcome = 'error';
-        status.textContent = getLanguage(currentLanguageId).error;
-      }
+      window.location.href = 'https://github.com/zzzzzzz698547/AI-service';
     });
 
     try {
