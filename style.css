@@ -115,7 +115,7 @@ button {
 .brand {
   display: grid;
   place-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .brand-image {
@@ -160,7 +160,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 11px;
-  margin-top: 8px;
+  margin-top: 14px;
 }
 
 .field {
