@@ -8,45 +8,56 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="shell">
-    <section class="hero">
-      <p class="eyebrow">客戶資料收集</p>
-      <h1>把聯絡資訊整理進後台</h1>
-      <p class="lede">
-        這是一個安全的動態表單。客戶送出後，後台會顯示姓名、電話、Email、備註與來源。
-      </p>
-    </section>
+  <main class="screen">
+    <section class="phone">
+      <div class="locale">中文(台灣)</div>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>新增客戶</h2>
-        <p>手機與桌面都可直接填寫。</p>
+      <div class="brand" aria-hidden="true">
+        <div class="brand-mark"></div>
       </div>
 
-      <form class="form" id="client-form">
-        <label>
+      <div class="intro">
+        <p class="eyebrow">客戶資料收集</p>
+        <h1>把聯絡資訊送進後台</h1>
+        <p class="lede">
+          以手機版登入頁的節奏呈現，但內容是安全的客戶資料表單。
+        </p>
+      </div>
+
+      <form class="card" id="client-form">
+        <label class="field">
           <span>姓名</span>
           <input name="name" type="text" placeholder="王小明" autocomplete="name" required />
         </label>
 
-        <label>
+        <label class="field">
           <span>電話</span>
           <input name="phone" type="tel" placeholder="0912 345 678" autocomplete="tel" required />
         </label>
 
-        <label>
+        <label class="field">
           <span>Email</span>
           <input name="email" type="email" placeholder="name@example.com" autocomplete="email" required />
         </label>
 
-        <label>
+        <label class="field">
           <span>備註</span>
           <textarea name="note" placeholder="例如：週五再聯繫、想了解方案 A"></textarea>
         </label>
 
-        <button type="submit">送出資料</button>
+        <button class="primary-btn" type="submit">送出資料</button>
         <p class="status" id="status" aria-live="polite"></p>
       </form>
+
+      <div class="divider">
+        <span></span>
+        <p>或</p>
+        <span></span>
+      </div>
+
+      <button class="secondary-btn" type="button">查看後台</button>
+
+      <a class="backlink" href="/admin">管理員登入</a>
     </section>
   </main>
 
