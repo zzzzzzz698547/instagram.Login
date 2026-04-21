@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>說明中心</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #1b74e4;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .screen {
+      min-height: 100svh;
+      padding: 20px 18px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+      padding: 8px 0 0;
+    }
+
+    .back {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 30px;
+      line-height: 1;
+      margin-left: -8px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      margin: 0 0 14px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .panel {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .panel ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .panel li + li { margin-top: 6px; }
+
+    .link {
+      display: inline-block;
+      margin-top: 18px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <main class="screen">
+    <section class="card">
+      <a class="back" href="/recover.html" aria-label="返回">‹</a>
+      <h1>說明中心</h1>
+      <p>這是一個本機示範頁，讓你了解流程與版面運作方式。</p>
+
+      <div class="panel">
+        <h2>這個頁面在做什麼？</h2>
+        <ul>
+          <li>只示範前台互動與頁面切換。</li>
+          <li>不會連動真實的驗證服務。</li>
+          <li>資料送出僅用於本機後台展示。</li>
+        </ul>
+      </div>
+
+      <a class="link" href="/index.html">返回首頁</a>
+    </section>
+  </main>
+</body>
+</html>
