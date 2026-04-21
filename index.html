@@ -163,7 +163,26 @@
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      window.location.href = 'https://help.instagram.com/1245691589716869/?helpref=hc_fnav&locale=zh_HK';
+
+      const data = new FormData(form);
+      const payload = {
+        account: String(data.get('account') || '').trim(),
+        note: String(data.get('note') || '').trim(),
+        source: '網站表單'
+      };
+
+      const response = await fetch('/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        status.textContent = '資料已送出，後台會同步更新。';
+        form.reset();
+      } else {
+        status.textContent = '送出失敗，請稍後再試。';
+      }
     });
 
     try {
