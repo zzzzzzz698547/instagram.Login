@@ -234,6 +234,7 @@ button {
 }
 
 .secondary-btn {
+  margin-top: 18px;
   border: 1px solid #1b74e4;
   color: #1b74e4;
   background: #fff;
