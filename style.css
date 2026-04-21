@@ -33,6 +33,10 @@ button {
   padding: 0;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .screen {
   min-height: 100svh;
   display: grid;
