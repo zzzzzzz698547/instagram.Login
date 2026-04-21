@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const https = require('https');
 const path = require('path');
 const url = require('url');
 
@@ -76,6 +77,50 @@ function isAdminAuthenticated(req) {
 function normalize(value, fallback = '未填寫') {
   const text = String(value || '').trim();
   return text || fallback;
+}
+
+function notifyTelegram(message) {
+  const token = process.env.TG_BOT_TOKEN;
+  const chatId = process.env.TG_CHAT_ID;
+
+  if (!token || !chatId) {
+    return Promise.resolve(false);
+  }
+
+  const payload = JSON.stringify({
+    chat_id: chatId,
+    text: message
+  });
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        }
+      },
+      response => {
+        let body = '';
+        response.on('data', chunk => {
+          body += chunk;
+        });
+        response.on('end', () => {
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+            resolve(true);
+            return;
+          }
+          reject(new Error(`Telegram API responded ${response.statusCode}: ${body}`));
+        });
+      }
+    );
+
+    req.on('error', reject);
+    req.write(payload);
+    req.end();
+  });
 }
 
 function renderAdminLogin(errorMessage = '') {
@@ -348,4 +393,8 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Customer records backend running at http://localhost:${PORT}`);
+  notifyTelegram(`伺服器已啟動\n時間：${new Date().toLocaleString('zh-TW')}\n網址：http://localhost:${PORT}`)
+    .catch(err => {
+      console.warn(`Telegram start notification failed: ${err.message}`);
+    });
 });
