@@ -202,12 +202,12 @@ button {
 .brand {
   display: grid;
   place-items: center;
-  margin-bottom: 48px;
+  margin-bottom: 54px;
 }
 
 .brand-image {
-  width: 56px;
-  height: 56px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 14px 30px rgba(15, 23, 42, 0.12));
@@ -247,7 +247,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 11px;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .field {
@@ -359,8 +359,8 @@ button {
   }
 
   .brand-image {
-    width: 78px;
-    height: 78px;
+    width: 84px;
+    height: 84px;
   }
 
   .intro h1 {
