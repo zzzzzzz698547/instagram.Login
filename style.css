@@ -177,10 +177,10 @@ button {
 .field input,
 .field textarea {
   width: 100%;
-  min-height: 54px;
+  min-height: 62px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  padding: 14px 18px;
+  padding: 18px 18px;
   background: #fbfbfb;
   color: var(--text);
   outline: none;
@@ -188,7 +188,7 @@ button {
 }
 
 .field textarea {
-  min-height: 54px;
+  min-height: 62px;
   resize: none;
 }
 
